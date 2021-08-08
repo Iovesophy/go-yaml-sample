@@ -25,11 +25,8 @@ g:
 `
 
 func parse(source string, dest interface{}) error {
-	err := yaml.UnmarshalStrict([]byte(source), dest)
-	if err != nil {
-		log.Fatalf("error: %v", err)
-	}
-	return err
+	parseError := yaml.Unmarshal([]byte(source), dest)
+	return parseError
 }
 
 func mapping(source interface{}, dest interface{}) error {
