@@ -25,6 +25,9 @@ g:
 `
 
 func parse(source string, dest interface{}) error {
+	if reflect.TypeOf(dest).Kind() != reflect.Ptr {
+		return errors.New("mapping: dest is not pointer")
+	}
 	parseError := yaml.Unmarshal([]byte(source), dest)
 	return parseError
 }
