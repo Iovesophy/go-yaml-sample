@@ -1,4 +1,4 @@
-module hoge/m
+module jsonyaml-go
 
 go 1.16
 

@@ -1,16 +1,33 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
-	"reflect"
 
-	"gopkg.in/yaml.v2"
+	mod "jsonyaml-go/common"
 )
 
-var data = `
-a: test
+var jsonData = `
+{
+  "a": "jsonData",
+  "b": 0,
+  "c": true,
+  "d": 3.14,
+  "e": 0,
+  "f": [
+    "hoge",
+    "huga"
+  ],
+  "g": [
+    0,
+    1,
+    2
+  ]
+}
+`
+
+var yamlData = `
+a: yamlData
 b: 0
 c: true
 d: 3.14
@@ -24,26 +41,6 @@ g:
    - 2
 `
 
-func parse(source string, dest interface{}) error {
-	if reflect.TypeOf(dest).Kind() != reflect.Ptr {
-		return errors.New("mapping: dest is not pointer")
-	}
-	parseError := yaml.Unmarshal([]byte(source), dest)
-	return parseError
-}
-
-func mapping(source interface{}, dest interface{}) error {
-	data, sourceError := yaml.Marshal(source)
-	if sourceError != nil {
-		return sourceError
-	}
-	if reflect.TypeOf(dest).Kind() != reflect.Ptr {
-		return errors.New("mapping: dest is not pointer")
-	}
-	destError := yaml.Unmarshal(data, dest)
-	return destError
-}
-
 func main() {
 	var schema struct {
 		A string
@@ -54,16 +51,35 @@ func main() {
 		F []string
 		G []int
 	}
-	var copy struct {
-		A string
+
+	var copyJson struct {
 		F []string
+		G []int
 	}
-	if err := parse(data, &schema); err != nil {
+
+	var copyYaml struct {
+		A string
+		B int
+		C bool
+	}
+
+	if err := mod.JsonParse(jsonData, &schema); err != nil {
 		log.Fatalf("error: %v", err)
 	}
-	if err := mapping(schema, &copy); err != nil {
+	if err := mod.JsonMapping(&schema, &copyJson); err != nil {
 		log.Fatalf("error: %v", err)
 	}
+	if err := mod.YamlParse(yamlData, &schema); err != nil {
+		log.Fatalf("error: %v", err)
+	}
+	if err := mod.YamlMapping(&schema, &copyYaml); err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	fmt.Print("schema: ")
 	fmt.Println(schema)
-	fmt.Println(copy)
+	fmt.Print("jsonData: ")
+	fmt.Println(copyJson)
+	fmt.Print("yamlData: ")
+	fmt.Println(copyYaml)
 }
