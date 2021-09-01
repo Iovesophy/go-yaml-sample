@@ -9,7 +9,7 @@ import (
 
 var jsonData = `
 {
-  "a": "jsonData",
+  "a": "hogehoge",
   "b": 0,
   "c": true,
   "d": 3.14,
@@ -27,7 +27,7 @@ var jsonData = `
 `
 
 var yamlData = `
-a: yamlData
+a: hogehoge
 b: 0
 c: true
 d: 3.14
@@ -43,7 +43,7 @@ g:
 
 func main() {
 	var schema struct {
-		A string
+		A int
 		B int
 		C bool
 		D float32
